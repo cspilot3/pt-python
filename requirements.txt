@@ -1,0 +1,17 @@
+fastapi==0.85.0
+uvicorn[standard]==0.18.3
+pydantic==1.10.2
+alembic==1.5.8
+psycopg2-binary==2.9
+pydantic==1.10.2
+requests==2.27.1
+SQLAlchemy==1.4.3
+opencensus-ext-requests
+coloredlogs
+opencensus-ext-azure
+orjson==3.6.6
+PyYAML
+azure-storage-blob==12.8.1
+python-multipart
+pygination==0.0.9
+anyio==3.6.1

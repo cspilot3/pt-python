@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 80:5000
+    container_name: api
+    env_file:
+      - .env
