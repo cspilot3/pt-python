@@ -17,7 +17,9 @@ class Settings(BaseSettings):
     CONTAINER_NAME: str = credentials['container_name']
     VERSION: str = "0.0.1"
     PROJECT_NAME: str = "Prueba Tecnica - Python"
-    DESCRIPTION: str = "Restful API"
+    DESCRIPTION: str = """Sistema en el cual el usuario por medio de una archivo plano (.csv) cargue 
+una plantilla de inventario aun DB PostgreSQL,\n El archivo es cargado a un BlobStorage de Azure y luego de su cargue se crean o actualizan los 
+datos en el modelo de la DB """
 
 
 settings = Settings()

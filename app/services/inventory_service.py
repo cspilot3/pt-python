@@ -3,34 +3,13 @@ from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
 from app.utils.utils import get_gln_cliente_from_upload_file, validate_flush, apply_changes
 from app.services.blob_service import upload_file_to_blob_storage, move_blob_to_processed_folder
+from app.services.client_service import get_or_create_cliente
+from app.services.branch_service import get_or_create_sucursal
+from app.services.product_service import get_or_create_producto
 from datetime import datetime
 
-from app.models import (Cliente, Sucursal, Producto, Inventario)
+from app.models.inventario import Inventario
 
-
-def get_or_create_cliente(db: Session, gln_cliente: str):
-    cliente = db.query(Cliente).filter_by(gln_cliente=gln_cliente).first()
-    if not cliente:
-        cliente = Cliente(gln_cliente=gln_cliente, nombre="Cliente Desconocido")
-        db.add(cliente)
-        validate_flush(db)
-    return cliente
-
-def get_or_create_sucursal(db: Session, gln_sucursal: str, cliente_id: int):
-    sucursal = db.query(Sucursal).filter_by(gln_sucursal=gln_sucursal, id_cliente=cliente_id).first()
-    if not sucursal:
-        sucursal = Sucursal(gln_sucursal=gln_sucursal, nombre="Sucursal Desconocida", id_cliente=cliente_id)
-        db.add(sucursal)
-        validate_flush(db)
-    return sucursal
-
-def get_or_create_producto(db: Session, gtn_producto: str):
-    producto = db.query(Producto).filter_by(gtin_producto=gtn_producto).first()
-    if not producto:
-        producto = Producto(gtin_producto=gtn_producto, nombre="Producto Desconocido")
-        db.add(producto)
-        validate_flush(db)
-    return producto
 
 async def process_record(db: Session, gln_cliente: str, record: str):
     fields = record.split(",")

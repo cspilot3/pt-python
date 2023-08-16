@@ -2,12 +2,11 @@ from fastapi import APIRouter, HTTPException, Depends, status, Query
 from fastapi import UploadFile, File
 from sqlalchemy.orm import Session
 from app.api.dependencies import get_db
-from app.services.blob_service import upload_file_to_blob_storage
 from app.services.inventory_service import process_inventory
-from app.utils.utils import get_gln_cliente_from_upload_file, count_records_in_file
+from app.utils.utils import count_records_in_file
 from fastapi.responses import JSONResponse
 from app.models.schemas.Inventory import InventoryResponse
-from app.models import Inventario, Sucursal, Cliente
+from app.models.inventario import Inventario
 from typing import List, Optional
 import asyncio
 
@@ -29,5 +28,26 @@ async def upload_inventory(
         else:
             asyncio.create_task(process_inventory(file, db))
             return JSONResponse(content={"message": "Procesamiento en segundo plano iniciado"}, status_code=status.HTTP_202_ACCEPTED)
+    except Exception as e:
+        return JSONResponse(content={"message": f"{str(e)}"}, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@router.get("/inventories/", 
+            response_model=InventoryResponse
+            )
+def get_inventories(
+    page: int = Query(1, description="Número de página"),
+    items_per_page: int = Query(10, description="Cantidad de elementos por página"),
+    gln_cliente: Optional[str] = Query(None, description="Código GLN del cliente"),
+    db: Session = Depends(get_db),
+):
+    try:
+        inventories_query: Query = db.query(Inventario).filter().all()
+        total = len(inventories_query)
+        start_index = (page - 1) * items_per_page
+        end_index = start_index + items_per_page
+        inventories = inventories_query[start_index : end_index]
+        inventories = [inventory.serialize(db) for inventory in inventories]
+
+        return InventoryResponse(inventarios=inventories, total=total)
     except Exception as e:
         return JSONResponse(content={"message": f"{str(e)}"}, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
