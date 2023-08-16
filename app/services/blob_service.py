@@ -5,11 +5,11 @@ from app.core.config import settings
 def upload_file_to_blob_storage(file: UploadFile, client_code: str) -> (bool, str):
     try:
         blob_service_client = BlobServiceClient.from_connection_string(settings.STORAGE_ACCOUNT_CS)
-        container_client = blob_service_client.get_container_client("blob-container")
+        container_client = blob_service_client.get_container_client(settings.CONTAINER_NAME)
         
         client_folder = f"unprocessed-files/{client_code}"
-        container_client.upload_blob(client_folder + "/" + file.filename, file.file.read(), overwrite=True)
         file.file.seek(0)
+        container_client.upload_blob(client_folder + "/" + file.filename, file.file.read(), overwrite=True)
         
         return True, ""
     except Exception as e:
@@ -18,8 +18,8 @@ def upload_file_to_blob_storage(file: UploadFile, client_code: str) -> (bool, st
     
 def move_blob_within_storage(source_blob_path: str, destination_blob_path: str):
     blob_service_client = BlobServiceClient.from_connection_string(settings.STORAGE_ACCOUNT_CS)
-    source_blob_client = blob_service_client.get_blob_client(container="blob-container", blob=source_blob_path)
-    destination_blob_client = blob_service_client.get_blob_client(container="blob-container", blob=destination_blob_path)
+    source_blob_client = blob_service_client.get_blob_client(container=settings.CONTAINER_NAME, blob=source_blob_path)
+    destination_blob_client = blob_service_client.get_blob_client(container=settings.CONTAINER_NAME, blob=destination_blob_path)
     
     destination_blob_client.start_copy_from_url(source_blob_client.url)
     source_blob_client.delete_blob()

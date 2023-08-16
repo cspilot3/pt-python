@@ -28,3 +28,4 @@ async def upload_inventory(
             return JSONResponse(content={"message": "Procesamiento en segundo plano iniciado"}, status_code=status.HTTP_202_ACCEPTED)
     except Exception as e:
         return JSONResponse(content={"message": f"{str(e)}"}, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
