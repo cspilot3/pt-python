@@ -37,7 +37,6 @@ async def upload_inventory(
 def get_inventories(
     page: int = Query(1, description="Número de página"),
     items_per_page: int = Query(10, description="Cantidad de elementos por página"),
-    gln_cliente: Optional[str] = Query(None, description="Código GLN del cliente"),
     db: Session = Depends(get_db),
 ):
     try:

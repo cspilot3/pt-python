@@ -24,7 +24,7 @@ procesamiento del mismo.
 
 # Variables de entorno
 
-Debes definir las siguientes variables:
+Debes definir las siguientes variables en el archivo .env:
 
 - DB_USER: Corresponde al usuario con el que se maneja la base de datos alojada en Azure.
 - DB_PASSWORD: Corresponde a la constraseña de la base de datos alojada en Azure.
