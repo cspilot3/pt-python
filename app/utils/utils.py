@@ -16,6 +16,7 @@ def get_gln_cliente_from_upload_file(file: UploadFile):
         return None
     
 def count_records_in_file(file: UploadFile) -> int:
+    file.file.seek(0)
     content = file.file.read().decode('utf-8')
     lines = content.split("\n")
     num_records = len(lines) - 1
